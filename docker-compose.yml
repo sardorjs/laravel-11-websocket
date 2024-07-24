@@ -1,0 +1,15 @@
+services:
+
+    # База данных
+    db:
+
+    # PHP приложение
+    app:
+        container_name: ${APP_NAME}-app
+        build:
+            context: .
+            dockerfile: ./.docker/php/Dockerfile
+        volumes:
+            -  .:${DOCKER_BASE_PATH}
+        depends_on:
+            - db
