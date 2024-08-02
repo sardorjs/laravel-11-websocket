@@ -59,18 +59,13 @@ WORKDIR ${DOCKER_BASE_PATH}
 # Скопируем проект в рабочую директорию
 COPY . ${DOCKER_BASE_PATH}
 
-# Создаем необходимые директории, если их нет
-RUN mkdir -p storage/framework/cache \
-    storage/framework/views \
-    storage/framework/sessions \
-
 # Установка зависимостей проекта: Эта команда выполняет установку зависимостей, указанных в composer.json, используя Composer.
 # Параметры: --no-dev: Не устанавливать зависимости, указанные в разделе require-dev вашего composer.json. --optimize-autoloader: Оптимизировать автозагрузчик для более быстрого выполнения.
 RUN composer install --no-dev --optimize-autoloader
 
 # Копируем .env.example в .env, если .env отсутствует
-# [ ! -f .env ] - Если файл .env существует, команда возвращает false, и условие после && не будет выполнено.
-RUN sh -c '[ ! -f .env ] && cp .env.example .env'
+# Обновляем команду для проверки наличия .env файла и копирования .env.example
+RUN if [ -f .env.example ] && [ ! -f .env ]; then cp .env.example .env; fi
 
 # Настройка прав доступа
 RUN chown -R www-data:www-data storage bootstrap/cache && \
@@ -78,8 +73,11 @@ RUN chown -R www-data:www-data storage bootstrap/cache && \
 
 # Генерируем ключ приложения и настраиваем кэш
 RUN php artisan key:generate && \
-    php artisan config:cache && \
+    php artisan config:clear && \
     php artisan route:cache
 
-#команда для запуска PHP-FPM
+# Эта команда копирует файл laravel.ini в директорию конфигурации PHP, где он будет автоматически загружен и применен PHP-FPM.
+COPY .docker/php/laravel.ini /usr/local/etc/php/conf.d/
+
+# команда для запуска PHP-FPM
 ENTRYPOINT ["php-fpm"]
