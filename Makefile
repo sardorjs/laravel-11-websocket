@@ -35,7 +35,7 @@ down-v-prune:		## Stop and remove all containers (with volume)
 	docker compose -f $(APP_DOCKER_COMPOSE) down --volumes
 
 cli:				## Open a bash shell in the app container and create an alias 'll' for 'ls -lah'
-	- docker compose exec -it app bash -c "echo 'alias ll=\"ls -lah\"' >> ~/.bashrc && bash"
+	docker compose exec -it app bash -c "echo 'alias ll=\"ls -lah\"' >> ~/.bashrc && bash"
 
 db:					## Logging in to MySQL as a created user
 	docker compose exec -it db bash -c "mysql -u $(DB_USERNAME) -p$(DB_PASSWORD) $(DB_DATABASE)"
