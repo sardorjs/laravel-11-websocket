@@ -30,7 +30,7 @@ services:
         # Задает имя контейнера
         container_name: nginx
         # Использует официальный образ Nginx
-        image: nginx
+        image: nginx:1.26.2
         # Пробрасывает порты 80 и 443 из контейнера на хост
         ports:
             - "80:80"
@@ -55,13 +55,16 @@ services:
         # Задает имя контейнера
         container_name: db
         # Использует официальный образ MySQL
-        image: mysql
+        image: mysql:9.0.1
         # Устанавливает переменные окружения для базы данных
         environment:
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
+        # Пробрасывает порты 3306 из контейнера на хост
+        ports:
+            - "3306:3306"
         # Монтирует volume для хранения данных базы данных
         volumes:
             - db-data:/var/lib/mysql
