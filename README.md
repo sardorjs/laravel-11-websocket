@@ -56,6 +56,30 @@ make cli
 composer install
 ```
 
+## *4.1. Troubleshoot with composer
+
+If you will get the errors similar to:
+- Install of fakerphp/faker failed
+- Could not delete /var/www/vendor/composer/9b9bafa4/FakerPHP-Faker-bfb4fe1/src/Faker/Provider:
+
+You should use this as solution:
+
+```
+make cli
+cd /root/.composer
+rm -rf cache
+nano config.json
+{
+  "config": {
+	  "process-timeout":      600,
+	  "preferred-install":    "dist",
+	  "github-protocols":     ["https"]
+  }
+}
+
+Save it and try one more time: composer install
+```
+
 ## 5. Set Directory Permissions
 
 Ensure the `storage` and `bootstrap/cache` directories are writable by running:
