@@ -11,6 +11,9 @@ services:
         # Монтирует локальную директорию проекта в контейнер
         volumes:
             -  .:${DOCKER_BASE_PATH}
+        # Добавляет в /etc/hosts - доступ наружу - к твоей машине* - в моем случае Windows
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         # Задает зависимость от сервиса db
         depends_on:
             - db
