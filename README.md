@@ -14,8 +14,8 @@ Ensure you have the following installed on your system:
 Start by cloning the repository to your local machine:
 
 ```bash
-git clone https://github.com/sardorjs/laravel-11-docker.git
-cd laravel-11-docker
+git clone https://github.com/sardorjs/laravel-11-xdebug.git
+cd laravel-11-xdebug
 ```
 
 ## 2. Copy the `.env` File
@@ -132,6 +132,11 @@ php artisan migrate
 ## 9. Access the Application
 
 The application should now be accessible at [http://localhost](http://localhost).
+
+## *10. Xdebug Installation
+
+- all steps are located in: `./INSTALLATION_XDEBUG_PHPSTORM.md` file
+
 
 ## Additional Notes
 
