@@ -45,6 +45,19 @@ Bring up the containers to initialize the environment:
 make up
 ```
 
+## *3.1. Troubleshoot with run containers
+
+If you will get the errors similar to:
+
+```
+ => ERROR [app internal] load build context                                                                                                                                                                                  108.5s
+ => => transferring context: 108.71MB                                                                                                                                                                                        108.1s 
+------
+ > [app internal] load build context:
+------
+failed to solve: archive/tar: unknown file mode ?rwxr-xr-x
+```
+- you should delete the **node_modules** folder, and vendor if exists
 
 
 ## 4. Install Dependencies
