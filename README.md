@@ -91,6 +91,7 @@ nano config.json
 }
 
 Save it and try one more time: composer install
+*maybe in new Git Bash terminal window
 ```
 
 ## 5. Set Directory Permissions
