@@ -45,6 +45,18 @@ Bring up the containers to initialize the environment:
 make up
 ```
 
+## *3.2. Troubleshoot with error during connect:
+
+If you get the errors similar to:
+
+```
+docker compose up -d --build
+error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.46/containers/json?all=1&filters=%7B%22label%22%3A%7B%22com.docker.compose.config-hash%22%3Atrue%2C%22com.docker.compose.project%3Dlaravel-11-websocket%22%3Atrue%7D%7D": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+make: *** [Makefile:26: up] Error 1
+```
+
+- you should launch the **Docker Desktop** in your computer
+
 ## *3.1. Troubleshoot with run containers
 
 If you get the errors similar to:
