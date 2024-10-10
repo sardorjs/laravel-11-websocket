@@ -14,8 +14,8 @@ Ensure you have the following installed on your system:
 Start by cloning the repository to your local machine:
 
 ```bash
-git clone https://github.com/sardorjs/laravel-11-xdebug.git
-cd laravel-11-xdebug
+git clone https://github.com/sardorjs/laravel-11-docker.git
+cd laravel-11-docker
 ```
 
 ## 2. Copy the `.env` File
@@ -47,7 +47,7 @@ make up
 
 ## *3.1. Troubleshoot with run containers
 
-If you will get the errors similar to:
+If you get the errors similar to:
 
 ```
  => ERROR [app internal] load build context                                                                                                                                                                                  108.5s
@@ -71,7 +71,7 @@ composer install
 
 ## *4.1. Troubleshoot with composer
 
-If you will get the errors similar to:
+If you get the errors similar to:
 - Install of fakerphp/faker failed
 - Could not delete /var/www/vendor/composer/9b9bafa4/FakerPHP-Faker-bfb4fe1/src/Faker/Provider:
 
