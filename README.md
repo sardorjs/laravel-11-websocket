@@ -45,7 +45,7 @@ Bring up the containers to initialize the environment:
 make up
 ```
 
-## *3.2. Troubleshoot with error during connect:
+## *3.1. Troubleshoot with error during connect:
 
 If you get the errors similar to:
 
@@ -57,7 +57,7 @@ make: *** [Makefile:26: up] Error 1
 
 - you should launch the **Docker Desktop** in your computer
 
-## *3.1. Troubleshoot with run containers
+## *3.2. Troubleshoot with run containers
 
 If you get the errors similar to:
 
