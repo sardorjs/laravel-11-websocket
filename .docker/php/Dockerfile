@@ -41,8 +41,12 @@ RUN \
         # docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp: Настройка расширения GD с поддержкой FreeType, JPEG и WebP.
         docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
         # docker-php-ext-install -j$(nproc) gd mbstring pdo pdo_mysql zip intl: Установка расширений GD, mbstring, pdo (Расширение для работы с базами данных через объектно-ориентированный интерфейс PDO (PHP Data Objects). Это обеспечивает универсальный способ работы с разными СУБД.), pdo_mysql (Расширение для PDO, которое предоставляет поддержку работы с базами данных MySQL.), zip(Расширение для работы с архивами ZIP. Позволяет создавать и извлекать ZIP-архивы из PHP-скриптов.) и intl (Расширение для интернационализации и локализации. Предоставляет функции для работы с различными языками, форматами чисел, дат и времени.) с использованием всех доступных процессоров - "-j$(nproc)".
-        docker-php-ext-install -j$(nproc) gd mbstring pdo pdo_mysql zip intl mysqli opcache exif
+        docker-php-ext-install -j$(nproc) gd mbstring pdo pdo_mysql zip intl mysqli opcache exif pcntl
 
+# Install Postgre PDO
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Установка Composer - это менеджер зависимостей для PHP.
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -69,7 +73,7 @@ ENV DOCKER_BASE_PATH=${DOCKER_BASE_PATH}
 ## Указывает Xdebug начинать отладку автоматически при каждом HTTP-запросе к приложению. Это удобно, когда нужно сразу подключаться к процессу отладки.
 #RUN echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 #
-## Указывает, что Xdebug должен подключаться к хосту (твоему компьютеру) по адресу host.docker.internal. Этот адрес позволяет контейнеру обращаться к хост-системе, что важно для взаимодействия с IDE.
+## Указывает, что Xdebug должен подключаться к хосту (твоему компьютеру) по адресу host.docker.internal. Этот адрес позволяет контейнеру обращаться к хост-системе, что важно для взаимодействия с IDE. Надо иметь ввиду что для Mac это может быть другое пример: (docker.for.mac.localhost)
 #RUN echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 #
 ## Задает порт 9001 для взаимодействия между Xdebug и отладочной средой (IDE). По умолчанию Xdebug использует порт 9000, но здесь используется 9001, чтобы избежать конфликтов.

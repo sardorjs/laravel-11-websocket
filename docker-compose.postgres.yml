@@ -1,0 +1,131 @@
+services:
+
+    # PHP приложение - Конфигурация для PHP-FPM
+    app:
+        # Задает имя контейнера
+        container_name: app
+        # Определяет контекст сборки и путь к Dockerfile
+        build:
+            context: .
+            dockerfile: ./.docker/php/Dockerfile
+        # Монтирует локальную директорию проекта в контейнер
+        volumes:
+            -  .:${DOCKER_BASE_PATH}
+        # Добавляет в /etc/hosts - доступ наружу - к твоей машине* - в моем случае Windows
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        # Задает зависимость от сервиса db
+        depends_on:
+            - db
+        # Подключает к сети app-network
+        networks:
+            - app-network
+        # Для PHP-FPM можно проверить, что сервис отвечает на запросы
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost" ]
+            interval: 30s
+            retries: 3
+            start_period: 30s
+            timeout: 10s
+
+    # Сервер
+    nginx:
+        # Задает имя контейнера
+        container_name: nginx
+        # Использует официальный образ Nginx
+        image: nginx:1.26.2
+        # Пробрасывает порты 80 и 443 из контейнера на хост
+        ports:
+            - "80:80"
+            - "443:443"
+        # Монтирует локальные файлы конфигурации и проект в контейнер
+        volumes:
+            - .:${DOCKER_BASE_PATH}
+            - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        # Подключает к сети app-network
+        networks:
+            - app-network
+        # Для Nginx можно проверять, что веб-сервер отвечает на запросы:
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost" ]
+            interval: 30s
+            retries: 3
+            start_period: 30s
+            timeout: 10s
+
+    # База данных
+    db:
+      # Задает имя контейнера
+      container_name: ${APP_SHORT_NAME}-db
+      # Использует официальный образ PostgreSQL
+      image: postgres:16.4
+      # Устанавливает переменные окружения для базы данных
+      environment:
+        POSTGRES_DB: ${DB_DATABASE}
+        POSTGRES_USER: ${DB_USERNAME}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # Пробрасывает порты 3306 из контейнера на хост
+      ports:
+        - "5432:5432"
+      # Монтирует volume для хранения данных базы данных
+      volumes:
+        - postgres-data:/var/lib/postgresql
+      # Подключает к сети app-network
+      networks:
+        - app-network
+      # Перезапускать контейнер, если он остановился, кроме случаев, когда остановлен вручную
+      restart: unless-stopped
+      # Для PostgreSQL можно использовать mysqladmin для проверки состояния базы данных:
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
+        interval: 30s
+        retries: 3
+        start_period: 30s
+        timeout: 10s
+
+    # Нереалиционная база данных
+    redis:
+        # Задает имя контейнера, чтобы его было легче идентифицировать и использовать в командах
+        container_name: redis
+
+        # Указывает, какой образ использовать для контейнера Redis.
+        # Здесь используется официальный образ Redis версии 7.4.1.
+        image: redis:7.4.1
+
+        # Определяет политику перезапуска контейнера. `always` означает, что контейнер будет перезапускаться автоматически,
+        # даже если он остановлен из-за ошибки. Это полезно для обеспечения стабильности приложения.
+        restart: always
+
+        # Пробрасывает порт 6379 (порт по умолчанию для Redis) из контейнера на хост.
+        # Это позволяет другим сервисам и инструментам подключаться к Redis через хост-машину.
+        ports:
+            - "6379:6379"
+
+        # Устанавливает команду запуска Redis-сервера с определенными параметрами:
+        # `--save 20 1` означает, что Redis будет сохранять дамп данных на диск каждые 20 секунд,
+        # если было сделано хотя бы одно изменение.
+        # `--loglevel warning` задает уровень логирования как предупреждения, чтобы не заполнять логи ненужной информацией.
+        command: redis-server --save 20 1 --loglevel warning
+
+        # Монтирует volume, чтобы сохранять данные Redis. Данные будут сохраняться в `/data` внутри контейнера,
+        # что позволяет их сохранять между перезапусками контейнера.
+        volumes:
+            - redis-data:/data
+
+        # Определяет, к какой сети подключается контейнер. Это необходимо для связи с другими контейнерами
+        # в пределах одной сети Docker (например, `app-network`), что упрощает взаимодействие между сервисами.
+        networks:
+            - app-network
+
+
+# Определяет volume для хранения данных MySQL
+volumes:
+    postgres-data:
+      driver: local
+    redis-data:
+        driver: local
+
+# Определяет сеть для связи между сервисами
+networks:
+    app-network:
+        driver: bridge

@@ -142,6 +142,12 @@ make cli
 php artisan migrate
 ```
 
+## *8.1 Troubleshoot with grant permissions
+If your user does not have grants, permissions and migrations are failing, you could use this command as possible solution:
+```bash
+make db-grant-privileges
+```
+
 ## 9. Access the Application
 
 The application should now be accessible at [http://localhost](http://localhost).
