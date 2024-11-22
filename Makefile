@@ -44,7 +44,7 @@ db-root:			## Logging in to MySQL as root
 	docker compose -f $(APP_DOCKER_COMPOSE) exec -it db bash -c "mysql -h 127.0.0.1 -P 3306 -u root -p$(DB_ROOT_PASSWORD)"
 
 db-grant-privileges:	## Grant necessary privileges to MySQL user
-	docker compose exec -it db bash -c "mysql -u root -p$(DB_ROOT_PASSWORD) -e \"GRANT SYSTEM_VARIABLES_ADMIN ON *.* TO '$(DB_USERNAME)'@'%'; GRANT SESSION_VARIABLES_ADMIN ON *.* TO '$(DB_USERNAME)'@'%'; FLUSH PRIVILEGES;\""
+	docker compose exec -it db bash -c "mysql -u root -p$(DB_ROOT_PASSWORD) -e \"GRANT SYSTEM_VARIABLES_ADMIN ON *.* TO '$(DB_USERNAME)'@'%'; GRANT SESSION_VARIABLES_ADMIN ON *.* TO '$(DB_USERNAME)'@'%'; GRANT ALL PRIVILEGES ON *.* TO '$(DB_USERNAME)'@'%'; FLUSH PRIVILEGES;\""
 
 df:					## Viewing memory usage values in Docker
 	docker system df
