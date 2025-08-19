@@ -3,7 +3,7 @@ services:
     # PHP приложение - Конфигурация для PHP-FPM
     app:
         # Задает имя контейнера
-        container_name: app
+        container_name: ${APP_NAME}-app
         # Определяет контекст сборки и путь к Dockerfile
         build:
             context: .
@@ -31,7 +31,7 @@ services:
     # Сервер
     nginx:
         # Задает имя контейнера
-        container_name: nginx
+        container_name: ${APP_NAME}-nginx
         # Использует официальный образ Nginx
         image: nginx:1.26.2
         # Пробрасывает порты 80 и 443 из контейнера на хост
@@ -56,7 +56,7 @@ services:
     # База данных
     db:
         # Задает имя контейнера
-        container_name: db
+        container_name: ${APP_NAME}-db
         # Использует официальный образ MySQL
         image: mysql:9.0.1
         # Устанавливает переменные окружения для базы данных
@@ -88,7 +88,7 @@ services:
     # Нереалиционная база данных
     redis:
         # Задает имя контейнера, чтобы его было легче идентифицировать и использовать в командах
-        container_name: redis
+        container_name: ${APP_NAME}-redis
 
         # Указывает, какой образ использовать для контейнера Redis.
         # Здесь используется официальный образ Redis версии 7.4.1.

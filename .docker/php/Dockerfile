@@ -44,9 +44,9 @@ RUN \
         docker-php-ext-install -j$(nproc) gd mbstring pdo pdo_mysql zip intl mysqli opcache exif pcntl
 
 # Install Postgre PDO
-RUN apt-get install -y libpq-dev \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql pgsql
 
 # Установка Composer - это менеджер зависимостей для PHP.
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -116,5 +116,13 @@ RUN chown -R www-data:www-data storage bootstrap/cache && \
 # Эта команда копирует файл laravel.ini в директорию конфигурации PHP, где он будет автоматически загружен и применен PHP-FPM.
 COPY .docker/php/laravel.ini /usr/local/etc/php/conf.d/
 
-# команда для запуска PHP-FPM
-ENTRYPOINT ["php-fpm"]
+# Установка Supervisor (процесс менеджер)
+RUN apt-get install -y supervisor
+
+RUN mkdir -p /var/log/supervisor /var/run
+
+# Копируем конфигурацию supervisord
+COPY .docker/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Запуск через Supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
