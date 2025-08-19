@@ -125,15 +125,7 @@ make cli
 php artisan key:generate
 ```
 
-## 7. Cache Configurations
-
-Update the `.env` variables in the configuration file:
-
-```bash
-make config-clear
-```
-
-## 8. Run Database Migrations
+## 7. Run Database Migrations
 
 Apply the migrations to set up the database schema:
 
@@ -142,10 +134,18 @@ make cli
 php artisan migrate
 ```
 
-## *8.1 Troubleshoot with grant permissions
+## *7.1 Troubleshoot with grant permissions
 If your user does not have grants, permissions and migrations are failing, you could use this command as possible solution:
 ```bash
 make db-grant-privileges
+```
+
+## 8. Cache Configurations
+
+Update the `.env` variables in the configuration file:
+
+```bash
+make config-clear
 ```
 
 ## 9. Access the Application
