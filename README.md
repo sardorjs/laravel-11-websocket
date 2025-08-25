@@ -1,4 +1,4 @@
-# Setup | Laravel 11 Project in Docker
+# Setup | Laravel 11 Websocket in Docker
 
 Follow the steps below to set up and run this Laravel 11 Project in Docker.
 
@@ -14,8 +14,8 @@ Ensure you have the following installed on your system:
 Start by cloning the repository to your local machine:
 
 ```bash
-git clone https://github.com/sardorjs/laravel-11-docker.git
-cd laravel-11-docker
+git clone https://github.com/sardorjs/laravel-11-websocket.git
+cd laravel-11-websocket
 ```
 
 ## 2. Copy the `.env` File
